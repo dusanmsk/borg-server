@@ -1,0 +1,17 @@
+source_directories:
+    - /etc
+    
+repositories:
+    - path: ssh://borg@localhost:2224/borg/repositories/testing_repo
+      label: repo1
+
+keep_daily: 7
+keep_weekly: 4
+keep_monthly: 6
+
+checks:
+    - name: repository
+    - name: archives
+
+#healthchecks:
+#    ping_url: https://hc-ping.com/be067061-cf96-4412-8eae-62b0c50d6a8c

@@ -1,0 +1,13 @@
+services:
+  borg-backup-server:
+    image: borg-backup-server:latest
+    ports:
+      - "2224:22"
+    environment:
+      AUTHORIZED_KEYS: |
+        ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGy+6GovqH6qY4DGovHIaUiGXudHMulCMdrMN/LJf4Hg msk@msk-VirtualBox
+        ssh-ed25519 AAAAC3NzaC2lZDI1NTE5AAAAIGy+6GovqH6qY4DGovHIaUiGXudHMulCMdrMN/LJf4Hg msk@msk-VirtualBox2
+        ssh-ed25519 AAAAC3NzaC3lZDI1NTE5AAAAIGy+6GovqH6qY4DGovHIaUiGXudHMulCMdrMN/LJf4Hg msk@msk-VirtualBox3
+    volumes:
+    # specify path where borg backup will be stored
+      - /tmp/test_backups:/borg
