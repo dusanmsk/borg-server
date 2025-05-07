@@ -1,13 +1,16 @@
 services:
   borg-backup-server:
-    image: borg-backup-server:latest
+    # it is a good practice to specify the image version instead of using "latest"
+    image: ghcr.io/dusanmsk/borg-server:latest
     ports:
+      # expose SSH port
       - "2224:22"
     environment:
+      # specify SSH authorized keys
       AUTHORIZED_KEYS: |
-        ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGy+6GovqH6qY4DGovHIaUiGXudHMulCMdrMN/LJf4Hg msk@msk-VirtualBox
-        ssh-ed25519 AAAAC3NzaC2lZDI1NTE5AAAAIGy+6GovqH6qY4DGovHIaUiGXudHMulCMdrMN/LJf4Hg msk@msk-VirtualBox2
-        ssh-ed25519 AAAAC3NzaC3lZDI1NTE5AAAAIGy+6GovqH6qY4DGovHIaUiGXudHMulCMdrMN/LJf4Hg msk@msk-VirtualBox3
+        ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGy+6GovqH6qY4DGovHIaUiGXudHMulCMdrMN/LJf4Hg user@example1
+        ssh-ed25519 AAAAC3NzaC2lZDI1NTE5AAAAIGy+7GovqH6qY4DGovHIaUiGXudHMulCMdrMN/LJf4Hg user@example2
+        ssh-ed25519 AAAAC3NzaC3lZDI1NTE5AAAAIGy+8GovqH6qY4DGovHIaUiGXudHMulCMdrMN/LJf4Hg user@example3
     volumes:
-    # specify path where borg backup will be stored
+      # specify path where borg backup will be stored
       - /tmp/test_backups:/borg
