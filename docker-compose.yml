@@ -1,7 +1,8 @@
 services:
   borg-backup-server:
     # it is a good practice to specify the image version instead of using "latest"
-    image: ghcr.io/dusanmsk/borg-server:latest
+    #image: ghcr.io/dusanmsk/borg-server:latest
+    build: server_image
     ports:
       # expose SSH port
       - "2224:22"
