@@ -6,6 +6,8 @@ services:
       # expose SSH port
       - "2224:22"
     environment:
+      # when 1, debugging is enabled. Only one connection will be allowed. Use this for testing.
+      DEBUG: 0
       # specify SSH authorized keys
       AUTHORIZED_KEYS: |
         ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGy+6GovqH6qY4DGovHIaUiGXudHMulCMdrMN/LJf4Hg user@example1

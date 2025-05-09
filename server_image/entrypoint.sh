@@ -45,5 +45,10 @@ chmod 700 /borg/.ssh/authorized_keys
 
 # start opensshd
 mkdir -p /run/sshd
-exec /usr/sbin/sshd -D -e
+if [ "$DEBUG" == "1" ]; then
+    echo "Starting sshd in debug mode... Only one connection will be possible, so use with caution."
+    exec /usr/sbin/sshd -D -e -ddd
+else
+    exec /usr/sbin/sshd -D -e
+fi
 
