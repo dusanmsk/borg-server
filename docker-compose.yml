@@ -1,12 +1,14 @@
 services:
   borg-backup-server:
     # it is a good practice to specify the image version instead of using "latest"
-    #image: ghcr.io/dusanmsk/borg-server:latest
-    build: server_image
+    image: ghcr.io/dusanmsk/borg-server:v0.0.3
+    #build: server_image
     ports:
       # expose SSH port
       - "2224:22"
     environment:
+      BORG_UID: 5000
+      BORG_GID: 5000
       # when 1, debugging is enabled. Only one connection will be allowed. Use this for testing.
       DEBUG: 0
       # specify SSH authorized keys

@@ -48,11 +48,14 @@ echo "$AUTHORIZED_KEYS" > /borg/.ssh/authorized_keys
 chown borg:borg /borg/.ssh /borg/.ssh/authorized_keys
 chmod 700 /borg/.ssh/authorized_keys
 
+echo "Running borg server as user: $(id -u borg) $(id -g borg)"
+
 # Spuštění OpenSSH serveru
 mkdir -p /run/sshd
 if [ "$DEBUG" = "1" ]; then
     echo "Starting sshd in debug mode... Only one connection will be possible, so use with caution."
     exec /usr/sbin/sshd -D -e -ddd
 else
+    echo "Starting sshd..."
     exec /usr/sbin/sshd -D -e
 fi
