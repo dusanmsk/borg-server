@@ -43,8 +43,9 @@ if [ ! -d /borg/.ssh ]; then
 fi
 
 echo "$AUTHORIZED_KEYS" > /borg/.ssh/authorized_keys
-chown borg:borg /borg/.ssh /borg/.ssh/authorized_keys
-chmod 700 /borg/.ssh/authorized_keys
+chown -R borg:borg /borg/.ssh
+chown -R root:root /borg/.ssh/sshd
+chmod u=rwX /borg/.ssh/
 
 echo "Running borg server as user: $(id -u borg):$(id -g borg)"
 
