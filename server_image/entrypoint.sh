@@ -44,6 +44,7 @@ fi
 
 echo "$AUTHORIZED_KEYS" > /borg/.ssh/authorized_keys
 chown -R borg:borg /borg/
+chmod 755 /borg
 chown -R root:root /borg/.ssh/sshd
 chmod 0644 /borg/.ssh/authorized_keys
 chmod -R 0600 /borg/.ssh/sshd
