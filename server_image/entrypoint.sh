@@ -40,7 +40,7 @@ fi
 
 # inject authorized keys and setup file permissions
 echo "$AUTHORIZED_KEYS" > /borg/.ssh/authorized_keys
-chown borg:borg /borg/.ssh/ /borg/.ssh/authorized_keys
+chown -R borg:borg /borg/.ssh/
 chmod 700 /borg/.ssh/authorized_keys
 
 # start opensshd
