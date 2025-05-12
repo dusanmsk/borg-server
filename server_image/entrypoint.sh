@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ "$DEBUG" == "1" ]; then
+    set -x
+fi
+
 if [ ! -d /borg ]; then
     echo "Backup directory /borg does not exist. Did you forget to mount it?"
     exit 1
