@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 
-if [ "$DEBUG" == "1" ]; then
+if [ "$DEBUG" = "1" ]; then
     set -x
 fi
 
@@ -9,50 +9,50 @@ if [ ! -d /borg ]; then
     exit 1
 fi
 
-userdel borg >/dev/null 2>&1
-groupdel borg >/dev/null 2>&1
-if [ "$BORG_UID" != "" ]; then
-    # delete conflicting user/group
-    if getent passwd "$BORG_UID" > /dev/null 2>&1; then
-        userdel -r "$(getent passwd "$BORG_UID" | cut -d: -f1)"
+deluser borg >/dev/null 2>&1
+delgroup borg >/dev/null 2>&1
+
+if [ -n "$BORG_UID" ]; then
+    if id -u "$BORG_UID" >/dev/null 2>&1; then
+        deluser "$(getent passwd "$BORG_UID" | cut -d: -f1)"
     fi
-    if getent group "$BORG_GID" > /dev/null 2>&1; then
-        groupdel "$(getent group "$BORG_GID" | cut -d: -f1)"
+    if getent group "$BORG_GID" >/dev/null 2>&1; then
+        delgroup "$(getent group "$BORG_GID" | cut -d: -f1)"
     fi
-    # create user and group with specified UID/GID
-    addgroup --gid $BORG_GID borg 
-    adduser --uid $BORG_UID --gid $BORG_GID --disabled-password --gecos "Borg Backup" --home /borg --no-create-home --quiet borg 
-else    
-    # create user and group with default UID/GID
-    adduser --disabled-password --gecos "Borg Backup" --home /borg --no-create-home --quiet borg 
+    addgroup -g "$BORG_GID" borg
+    adduser -u "$BORG_UID" -G borg -h /borg -H -D borg
+else
+    addgroup borg
+    adduser -G borg -h /borg -H -D borg
 fi
 
-# setup on first start
+passwd -u borg
+
 if [ ! -d /borg/.ssh ]; then
     mkdir -p /borg/.ssh/sshd
     chown -R root:root /borg/.ssh/sshd
-    cd /borg/.ssh/sshd
+    cd /borg/.ssh/sshd || exit 1
     echo "Generating SSH keys..."
     ssh-keygen -t rsa -b 4096 -f /borg/.ssh/sshd/ssh_host_rsa_key -N ""
     ssh-keygen -t ecdsa -b 521 -f /borg/.ssh/sshd/ssh_host_ecdsa_key -N ""
     ssh-keygen -t ed25519 -f /borg/.ssh/sshd/ssh_host_ed25519_key -N ""
     chmod 600 /borg/.ssh/sshd/ssh_host_*
-    cd -
+    cd - || exit 1
     mkdir -p /borg/repositories
-    chown borg:borg /borg/ /borg/repositories
+    chown borg:borg /borg /borg/repositories
 fi
 
-# inject authorized keys and setup file permissions
 echo "$AUTHORIZED_KEYS" > /borg/.ssh/authorized_keys
-chown -R borg:borg /borg/.ssh/
+chown borg:borg /borg/.ssh /borg/.ssh/authorized_keys
 chmod 700 /borg/.ssh/authorized_keys
 
-# start opensshd
+echo "Running borg server as user: $(id -u borg):$(id -g borg)"
+
 mkdir -p /run/sshd
-if [ "$DEBUG" == "1" ]; then
+if [ "$DEBUG" = "1" ]; then
     echo "Starting sshd in debug mode... Only one connection will be possible, so use with caution."
     exec /usr/sbin/sshd -D -e -ddd
 else
+    echo "Starting sshd..."
     exec /usr/sbin/sshd -D -e
 fi
-

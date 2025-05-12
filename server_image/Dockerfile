@@ -5,7 +5,7 @@ RUN apk update && \
     openssh \
     borgbackup
 
-ADD ./entrypoint_alpine.sh /entrypoint.sh
+ADD ./entrypoint.sh /entrypoint.sh
 ADD sshd_config /etc/ssh/
 
 EXPOSE 22
